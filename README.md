@@ -6,7 +6,7 @@ The aim of this repository is to create a pool of custom field types to spare yo
 
 ## Installation
 
-1. Run `composer require schrittweiter/acf` in your theme folder
+1. Run `composer require schrittweiter/extended-acf` in your theme folder
 2. Make sure you are autoloading your composer vendors e.g.
 ```php
 require_once __DIR__.'/vendor/autoload.php';

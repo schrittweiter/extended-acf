@@ -1,5 +1,5 @@
 {
-    "name": "schrittweiter/acf",
+    "name": "schrittweiter/extended-acf",
     "type": "library",
     "require": {
         "vinkla/extended-acf": "^13.7.1",
