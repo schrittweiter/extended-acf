@@ -1,0 +1,25 @@
+{
+    "name": "schrittweiter/acf",
+    "type": "library",
+    "require": {
+        "vinkla/extended-acf": "^13.7.1",
+        "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Schrittweiter\\Acf\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "David Kuhlmann",
+            "email": "dk@schrittweiter.de"
+        },
+        {
+            "name": "Morten Sassi",
+            "email": "dev@mortensassi.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
