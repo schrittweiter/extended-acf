@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * Extend flexbible content field type by "Vinkla Extended ACF"
+ * Extend flexible content field type by "Vinkla Extended ACF"
  *
  * @link       https://schrittweiter.de
  * @since      1.0.0
@@ -12,7 +14,7 @@
  * Extend "WordPlate Extended" flexible content by following plugin: Advanced Custom Fields: Extended PRO
  *
  * @link       https://www.acf-extended.com/features/fields/flexible-content
- * @version    0.8.8.6
+ * @version    9.2.1
  *
  * @author     ACF Extended <https://www.acf-extended.com/>
  */
@@ -38,6 +40,8 @@ class FlexibleContent extends Field
         parent::__construct($label, $name);
 
         $this->advanced();
+        $this->hideButtons();
+        $this->hideTopActions();
     }
 
     /**
@@ -47,7 +51,7 @@ class FlexibleContent extends Field
      */
     public function advanced(): self
     {
-		$this->settings['acfe_flexible_advanced'] = true;
+        $this->settings['acfe_flexible_advanced'] = true;
 
         return $this;
     }
@@ -60,7 +64,7 @@ class FlexibleContent extends Field
      */
     public function stylisedButton(): self
     {
-		$this->settings['acfe_flexible_stylised_button'] = true;
+        $this->settings['acfe_flexible_stylised_button'] = true;
 
         return $this;
     }
@@ -75,9 +79,9 @@ class FlexibleContent extends Field
      */
     public function modalEdit(string $size = 'full'): self
     {
-		$this->settings['acfe_flexible_modal_edit'] = [
+        $this->settings['acfe_flexible_modal_edit'] = [
             'acfe_flexible_modal_edit_enabled' => true,
-            'acfe_flexible_modal_edit_size' => $size
+            'acfe_flexible_modal_edit_size' => $size,
         ];
 
         return $this;
@@ -95,13 +99,12 @@ class FlexibleContent extends Field
      */
     public function modalSelection(string $size = 'full', string $title = 'Choose Layout', int $cols = 4, bool $cats = false): self
     {
-		$this->settings['acfe_flexible_modal'] = [
+        $this->settings['acfe_flexible_modal'] = [
             'acfe_flexible_modal_enabled' => true,
             'acfe_flexible_modal_title' => $title,
             'acfe_flexible_modal_size' => $size,
             'acfe_flexible_modal_col' => $cols,
-            'acfe_flexible_modal_categories' => $cats
-
+            'acfe_flexible_modal_categories' => $cats,
         ];
 
         return $this;
@@ -116,14 +119,13 @@ class FlexibleContent extends Field
      * @param bool $nowrap
      * @return $this
      */
-    public function grid(string $align = 'center', string $vAlign = 'stretch', $nowrap = 0): self
+    public function grid(string $align = 'center', string $vAlign = 'stretch', int $nowrap = 0): self
     {
-		$this->settings['acfe_flexible_grid'] = [
+        $this->settings['acfe_flexible_grid'] = [
             'acfe_flexible_grid_enabled' => true,
             'acfe_flexible_grid_align' => $align,
             'acfe_flexible_grid_valign' => $vAlign,
-            'acfe_flexible_grid_wrap' => $nowrap
-
+            'acfe_flexible_grid_wrap' => $nowrap,
         ];
 
         return $this;
@@ -137,8 +139,7 @@ class FlexibleContent extends Field
      */
     public function templates(): self
     {
-
-		$this->settings['acfe_flexible_layouts_templates'] = true;
+        $this->settings['acfe_flexible_layouts_templates'] = true;
 
         return $this;
     }
@@ -153,7 +154,7 @@ class FlexibleContent extends Field
      */
     public function placeholder(): self
     {
-		$this->settings['acfe_flexible_layouts_placeholder'] = true;
+        $this->settings['acfe_flexible_layouts_placeholder'] = true;
 
         return $this;
     }
@@ -166,7 +167,7 @@ class FlexibleContent extends Field
      */
     public function previews(): self
     {
-		$this->settings['acfe_flexible_layouts_previews'] = true;
+        $this->settings['acfe_flexible_layouts_previews'] = true;
 
         return $this;
     }
@@ -181,7 +182,7 @@ class FlexibleContent extends Field
      */
     public function thumbnails(): self
     {
-		$this->settings['acfe_flexible_layouts_thumbnails'] = true;
+        $this->settings['acfe_flexible_layouts_thumbnails'] = true;
 
         return $this;
     }
@@ -196,7 +197,7 @@ class FlexibleContent extends Field
      */
     public function settings(): self
     {
-		$this->settings['acfe_flexible_layouts_settings'] = true;
+        $this->settings['acfe_flexible_layouts_settings'] = true;
 
         return $this;
     }
@@ -210,7 +211,7 @@ class FlexibleContent extends Field
      */
     public function ajax(): self
     {
-		$this->settings['acfe_flexible_layouts_ajax'] = true;
+        $this->settings['acfe_flexible_layouts_ajax'] = true;
 
         return $this;
     }
@@ -226,9 +227,65 @@ class FlexibleContent extends Field
      * @param array $actions
      * @return $this
      */
-    public function addActions(array $actions): self
+    public function addActions(array $actions = []): self
     {
-		$this->settings['acfe_flexible_add_actions'] = $actions;
+        $this->settings['acfe_flexible_add_actions'] = $actions;
+
+        return $this;
+    }
+
+    /**
+     * Hide specific buttons from the layout controls
+     *
+     * Options: add, collapse, delete, duplicate, rename, disable, top_actions
+     *
+     * @link https://www.acf-extended.com/features/fields/flexible-content/advanced-settings#hide-buttons
+     *
+     * @param array $buttons List of buttons to hide
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return $this
+     */
+    public function hideButtons(array $buttons = []): self
+    {
+        $allowed = ['add', 'collapse', 'delete', 'duplicate', 'rename', 'disable', 'top_actions'];
+
+        foreach ($buttons as $button) {
+            if (!in_array($button, $allowed)) {
+                throw new \InvalidArgumentException("Invalid button [$button].");
+            }
+        }
+
+        $this->settings['acfe_flexible_remove_button'] = $buttons;
+
+        return $this;
+    }
+
+    /**
+     * Hide specific top action buttons
+     *
+     * Options: expand, collapse, add
+     *
+     * @link https://www.acf-extended.com/features/fields/flexible-content/advanced-settings#hide-top-actions
+     *
+     * @param array $actions List of top actions to hide
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return $this
+     */
+    public function hideTopActions(array $actions = []): self
+    {
+        $allowed = ['expand', 'collapse', 'add'];
+
+        foreach ($actions as $action) {
+            if (!in_array($action, $allowed)) {
+                throw new \InvalidArgumentException("Invalid top action [$action].");
+            }
+        }
+
+        $this->settings['acfe_flexible_remove_top_actions'] = $actions;
 
         return $this;
     }
@@ -241,9 +298,9 @@ class FlexibleContent extends Field
      * @param string $message
      * @return $this
      */
-    public function emptyMessage(string $message): self
+    public function emptyMessage(string $message = ''): self
     {
-		$this->settings['acfe_flexible_empty_message'] = $message;
+        $this->settings['acfe_flexible_empty_message'] = $message;
 
         return $this;
     }
